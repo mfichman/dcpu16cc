@@ -40,6 +40,11 @@ typedef enum cc_token {
     CC_TOK_STRUCT, 
     CC_TOK_STRING,
     CC_TOK_NUMBER,
+    CC_TOK_ID,
+    CC_TOK_AND,
+    CC_TOK_OR,
+    CC_TOK_EQ,
+    CC_TOK_NE,
     CC_TOK_EOF
 } cc_token;
 

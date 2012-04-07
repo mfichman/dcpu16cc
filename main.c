@@ -21,7 +21,9 @@
  */  
 
 #include "lexer.h"
-
+#include "parser.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 void usage() {
     printf("Usage: dcpu16cc [file]\n");
@@ -31,11 +33,17 @@ int main(int argc, char ** argv) {
     if (argc < 2) {
         usage();
     } else {
+/*
         cc_lexer * lex = cc_lexer_init(0, argv[1]);
         while (lex->token != CC_TOK_EOF) {
             cc_lexer_next(lex);
             printf("%s\n", lex->value);
         }
+*/
+        cc_env * env = calloc(1, sizeof(cc_env));
+        cc_parser * parser = cc_parser_init(env, argv[1]);
+        cc_parser_global(parser);
+        cc_env_print(env);
     }
     return 0;
 }

@@ -29,7 +29,7 @@
 
 /* Creates a new lexer that will read from 'file'.  'env' contains the C
  * lexical environment (unused for now) */
-cc_lexer * cc_lexer_init(cc_env * env, const char* file) {
+cc_lexer * cc_lexer_init(cc_env * env, char const * file) {
     cc_lexer * self = calloc(1, sizeof(cc_lexer));
     self->in = fopen(file, "r");
     self->ch = fgetc(self->in);
@@ -70,6 +70,33 @@ restart:
             self->token = c;
             self->value[0] = c;
             self->value[1] = '\0';
+        }
+    } else if ('|' == c) {
+        cc_lexer_getc(self);        
+        if ('|' == self->ch) {
+            self->token = CC_TOK_OR;
+        } else {
+            ungetc(self->ch, self->in);
+            self->token = c;
+        }
+
+    } else if ('&' == c) {
+        cc_lexer_getc(self);
+        if ('&' == self->ch) {
+            self->token = CC_TOK_AND;
+        } else {
+            ungetc(self->ch, self->in);
+            self->token = c;
+        }
+    } else if ('=' == c) {
+        cc_lexer_getc(self);
+        if ('=' == self->ch) {
+            self->token = CC_TOK_EQ;
+        } else if ('!' == self->ch) {
+            self->token = CC_TOK_NE;
+        } else {
+            ungetc(self->ch, self->in);
+            self->token = c;
         }
     } else {
         self->token = c;
@@ -153,24 +180,25 @@ void cc_lexer_id(cc_lexer * self) {
     }
     self->value[i++] = '\0';
 
-    if (strcmp("if", self->value)) {
+    if (!strcmp("if", self->value)) {
         self->token = CC_TOK_IF; 
-    } else if (strcmp("while", self->value)) {
+    } else if (!strcmp("while", self->value)) {
         self->token = CC_TOK_WHILE;
-    } else if (strcmp("return", self->value)) {
+    } else if (!strcmp("return", self->value)) {
         self->token = CC_TOK_RETURN;
-    } else if (strcmp("do", self->value)) {
+    } else if (!strcmp("do", self->value)) {
         self->token = CC_TOK_DO;
-    } else if (strcmp("for", self->value)) {
+    } else if (!strcmp("for", self->value)) {
         self->token = CC_TOK_FOR;
-    } else if (strcmp("int", self->value)) {
+    } else if (!strcmp("int", self->value)) {
         self->token = CC_TOK_INT;
-    } else if (strcmp("char", self->value)) {
+    } else if (!strcmp("char", self->value)) {
         self->token = CC_TOK_CHAR;
-    } else if (strcmp("struct", self->value)) {
+    } else if (!strcmp("struct", self->value)) {
         self->token = CC_TOK_STRUCT;
+    } else {
+        self->token = CC_TOK_ID;
     }
-    
 }
 
 /* Checks if the value is too large; if it is, sets the error flag, returns 0,

@@ -30,7 +30,17 @@
  * state should go here */
 typedef struct cc_env {
     cc_func * funcs;
-    cc_var * vars;
+    cc_var * vars; /* Global variables */
+    cc_id * ids; /* Identifiers */
 } cc_env;
+
+cc_id * cc_env_id(cc_env * self, char const * str);
+cc_var * cc_env_var(cc_env * self, cc_id * id);
+cc_func * cc_env_func(cc_env * self, cc_id * id);
+void cc_env_print(cc_env * self);
+void cc_func_print(cc_func * self);
+void cc_type_print(cc_type * self);
+void cc_formal_print(cc_formal * self);
+void cc_id_print(cc_id * id);
 
 #endif
