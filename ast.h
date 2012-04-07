@@ -24,7 +24,7 @@
 #define CC_AST_H
 
 /* Used to identify the type of AST node, as declared below. */
-enum cc_asttype {
+typedef enum cc_asttype {
     CC_FUNC,
     CC_STMT,
     CC_BLOCK,
@@ -34,14 +34,14 @@ enum cc_asttype {
     CC_CALL,
     CC_IF,
     CC_FOR,
-    CC_WHILE,
-};
+    CC_WHILE
+} cc_asttype;
 
 /* Base AST node type.  'type' defines the extended type.  'next' is used to
  * join nodes together in a linked list. */
 typedef struct cc_astnode {
     cc_asttype type;
-    cc_astnode * next;
+    struct cc_astnode * next;
 } cc_astnode;
 
 /* Identifier.  These are cached in a global identifier table */
@@ -53,9 +53,23 @@ typedef struct cc_id {
  * then 'type' defines the 'nested' type definition */
 typedef struct cc_type {
     int flags; 
-    cc_type * nested;
+    struct cc_type * nested;
     cc_id id;
 } cc_type;
+
+typedef struct cc_expr {
+    cc_astnode node;
+    cc_type * type;
+} cc_expr;
+
+/* Used for all variables, local and global */
+typedef struct cc_var {
+    cc_astnode node;
+    cc_expr * init; /* Initializer expr */
+    cc_type * type;
+    cc_id id;
+} cc_var;
+
 
 /* C statement.  'expr' may be a list if the statement is a block. */
 typedef struct cc_stmt {
@@ -71,11 +85,6 @@ typedef struct cc_struct {
     cc_astnode node;
     cc_var * vars; 
 } cc_struct;
-
-typedef struct cc_expr {
-    cc_astnode node;
-    cc_type * type;
-} cc_type;
 
 /* Struct member dereference. 'left' is the expression to the left of the '.'
  * operator */
@@ -119,19 +128,11 @@ typedef struct cc_loop {
     cc_stmt * stmt;
 } cc_for;
 
-/* Used for all variables, local and global */
-typedef struct cc_var {
-    cc_astnode node;
-    cc_expr * init; /* Initializer expr */
-    cc_type * type;
-    cc_id id;
-} cc_var;
-
 /* Stores formal function parameters */
 typedef struct cc_formal {
     cc_type * type;
     cc_id id;
-    cc_formal * next;
+    struct cc_formal * next;
 } cc_formal;
 
 typedef struct cc_func {

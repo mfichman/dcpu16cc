@@ -20,37 +20,17 @@
  * IN THE SOFTWARE.
  */  
 
-#ifndef CC_LEXER_H
-#define CC_LEXER_H
+#ifndef CC_ENV_H
+#define CC_ENV_H
 
-/* List of reserved words an other token types.  Individual character operators
- * have a token code equal to their ASCII code extended to 4 bytes */
-enum cc_token {
-    CC_TOK_IF = 255, /* Larger than any character */
-    CC_TOK_ELSE,
-    CC_TOK_WHILE,
-    CC_TOK_RETURN,
-    CC_TOK_DO,
-    CC_TOK_INT,
-    CC_TOK_CHAR,
-    CC_TOK_STRUCT, 
-};
+#include "ast.h"
 
-typedef struct cc_lexer {
-    cc_env * env; 
-    cc_token token[16]; /* Array of tokens for lookahead */
-    int tokenind; /* Index of the current token */
-    char value[1024]; /* Nothing longer than this */
-    int errors;
-};
-
-cc_lexer* cc_lexer_init(const char* file);
-void cc_lexer_next();
-void cc_lexer_comment();
-void cc_lexer_number();
-void cc_lexer_string();
-void cc_lexer_id();
-void cc_lexer_read();
-cc_token cc_lexer_token();
+/* The environment holds the global symbol table,
+ * amongst other things.  Any shared whole-program
+ * state should go here */
+typedef struct cc_env {
+    cc_func * funcs;
+    cc_var * vars;
+} cc_env;
 
 #endif
