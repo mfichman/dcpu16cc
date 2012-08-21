@@ -28,13 +28,18 @@ typedef enum cc_asttype {
     CC_FUNC,
     CC_BLOCK,
     CC_MEMBER,
-    CC_BINARYOP,
-    CC_UNARYOP,
+    CC_BINARY,
+    CC_UNARY,
     CC_CALL,
     CC_IF,
     CC_FOR,
     CC_WHILE,
-    CC_SIMPLE
+    CC_SIMPLE,
+    CC_REF,
+    CC_NUMBER,
+    CC_STRING,
+    CC_RETURN,
+    CC_VAR
 } cc_asttype;
 
 static int const CC_TYPE_PTR = 1;
@@ -45,7 +50,6 @@ static int const CC_TYPE_ARRAY = 2;
 typedef struct cc_astnode {
     cc_asttype type;
     int line; /* Line number of the source text */
-    struct cc_astnode * next;
 } cc_astnode;
 
 /* Identifier.  These are cached in a global identifier table */
@@ -66,9 +70,26 @@ typedef struct cc_type {
 typedef struct cc_expr {
     cc_astnode node;
     cc_type * type;
-    cc_id * id;
-    struct cc_expr * args;
+    struct cc_expr * next;
 } cc_expr;
+
+typedef struct cc_binary {
+    cc_expr node;
+    cc_expr * left;
+    cc_expr * right;
+    int op;
+} cc_binary;
+
+typedef struct cc_unary {
+    cc_expr node;
+    cc_expr * expr;
+    int op;
+} cc_unary;
+
+typedef struct cc_ref {
+    cc_expr node;
+    cc_id * id;
+} cc_ref;
 
 /* Used for all variables, local and global */
 typedef struct cc_var {
@@ -108,12 +129,17 @@ typedef struct cc_if {
 /* Used for all loop types.  If it's a while or do-while, then 'init' and
  * 'update' will be empty. */
 typedef struct cc_loop {
-    cc_stmt * node;
+    cc_stmt node;
     cc_expr * init;
     cc_expr * guard;
     cc_expr * update;
     cc_block * block;
 } cc_loop;
+
+typedef struct cc_return {
+    cc_stmt node;
+    cc_expr * expr;
+} cc_return;
 
 
 /* Struct definition.  The 'var' field is a linked list of attributes of the
@@ -128,14 +154,24 @@ typedef struct cc_struct {
 typedef struct cc_member {
     cc_expr node;
     cc_id * id;
-    cc_expr * left;
+    cc_expr * expr;
 } cc_member;
 
 typedef struct cc_call {
     cc_expr node;
-    cc_id * id;
+    cc_expr * expr; /* Function value expression */
     cc_expr * args;
 } cc_call;
+
+typedef struct cc_string {
+    cc_expr node;
+    char const * value;
+} cc_string;
+
+typedef struct cc_number {
+    cc_expr node;
+    char const * value;
+} cc_number;
 
 /* Stores formal function parameters */
 typedef struct cc_formal {
@@ -150,6 +186,7 @@ typedef struct cc_func {
     cc_formal * formals;
     cc_type * type;
     cc_block * block;
+    struct cc_func * next;
 } cc_func;
 
 cc_func* cc_find_func(cc_func* func, cc_id * id);

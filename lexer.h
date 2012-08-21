@@ -45,6 +45,11 @@ typedef enum cc_token {
     CC_TOK_OR,
     CC_TOK_EQ,
     CC_TOK_NE,
+    CC_TOK_LE,
+    CC_TOK_GE,
+    CC_TOK_RSHIFT,
+    CC_TOK_LSHIFT,
+    CC_TOK_ARROW,
     CC_TOK_EOF
 } cc_token;
 

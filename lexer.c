@@ -74,28 +74,29 @@ restart:
     } else if ('|' == c) {
         cc_lexer_getc(self);        
         if ('|' == self->ch) {
+            cc_lexer_getc(self);
             self->token = CC_TOK_OR;
         } else {
-            ungetc(self->ch, self->in);
             self->token = c;
         }
 
     } else if ('&' == c) {
         cc_lexer_getc(self);
         if ('&' == self->ch) {
+            cc_lexer_getc(self);
             self->token = CC_TOK_AND;
         } else {
-            ungetc(self->ch, self->in);
             self->token = c;
         }
     } else if ('=' == c) {
         cc_lexer_getc(self);
         if ('=' == self->ch) {
+            cc_lexer_getc(self);
             self->token = CC_TOK_EQ;
         } else if ('!' == self->ch) {
+            cc_lexer_getc(self);
             self->token = CC_TOK_NE;
         } else {
-            ungetc(self->ch, self->in);
             self->token = c;
         }
     } else {

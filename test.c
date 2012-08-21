@@ -1,6 +1,16 @@
-int main() {
 
-/* hlelelle s9932  {s3q34 * / */
-    char * bob = "23939\"393";
-    return 39393930;
+
+int main() {
+    int x = 1 + 2 * 8;
+    int bob = 2;
+    int ** bob = 39;
+
+    int test = *bill;
+    *foo(1, 2, 3) + 1 && bob;
+
+    for (i = 0; i < 100; i) {
+        x = 99;    
+        i;
+    }
+    return 0;
 }

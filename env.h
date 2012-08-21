@@ -41,6 +41,22 @@ void cc_env_print(cc_env * self);
 void cc_func_print(cc_func * self);
 void cc_type_print(cc_type * self);
 void cc_formal_print(cc_formal * self);
-void cc_id_print(cc_id * id);
+void cc_block_print(cc_block * self);
+void cc_stmt_print(cc_stmt * self);
+void cc_var_print(cc_var * self);
+void cc_expr_print(cc_expr * self);
+void cc_id_print(cc_id * self);
+void cc_member_print(cc_member * self);
+void cc_binary_print(cc_binary * self);
+void cc_unary_print(cc_unary * self);
+void cc_call_print(cc_call * self);
+void cc_ref_print(cc_ref * self);
+void cc_number_print(cc_number * self);
+void cc_string_print(cc_string * self);
+void cc_if_print(cc_if * self);
+void cc_for_print(cc_loop * self);
+void cc_while_print(cc_loop * self);
+void cc_simple_print(cc_simple * self);
+void cc_return_print(cc_return * self);
 
 #endif
